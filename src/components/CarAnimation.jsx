@@ -53,14 +53,10 @@ const CarAnimation = forwardRef((props, ref) => {
   }, []);
 
   return (
-    <div ref={containerRef} style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '60vh',
-      background: '#f7f7fa',
-      width: '100%',
-    }}>
+    <div
+      ref={containerRef}
+      className="flex items-center justify-center min-h-[60vh] w-full bg-neutral-800 rounded-lg"
+    >
       <svg
         viewBox="0 0 800 300"
         style={{ width: '90vw', maxWidth: 800, height: 'auto', display: 'block' }}
