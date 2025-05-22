@@ -19,7 +19,7 @@ function IconPlaceholder({ type }) {
 export default function ServiceCard({ type = 'tint', name = 'Service Name', description = 'Service description goes here.', price = '$199' }) {
   return (
     <div
-      className="group bg-gray-900 text-gray-100 rounded-xl shadow-xl p-6 flex flex-col items-center border-2 border-gray-800 transition-all duration-200 hover:scale-105 hover:border-blue-500 hover:shadow-blue-500/40 focus-within:scale-105 focus-within:border-blue-500 focus-within:shadow-blue-500/40 cursor-pointer"
+      className="group bg-neutral-800 text-gray-100 rounded-xl shadow-xl p-6 flex flex-col items-center border border-neutral-700 transition-all duration-200 hover:scale-105 hover:border-blue-500 hover:shadow-blue-500/40 focus-within:scale-105 focus-within:border-blue-500 focus-within:shadow-blue-500/40 cursor-pointer"
       tabIndex={0}
     >
       <IconPlaceholder type={type} />

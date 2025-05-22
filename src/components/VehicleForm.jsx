@@ -21,10 +21,10 @@ export default function VehicleForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-gray-900 text-gray-100 rounded-xl shadow-lg p-6 flex flex-col gap-4 w-72 min-w-[240px]"
-    >
+  <form
+    onSubmit={handleSubmit}
+    className="bg-white/5 backdrop-blur-lg border border-white/10 text-gray-100 rounded-2xl shadow-xl p-6 flex flex-col gap-4 w-full max-w-sm"
+  >
       <h2 className="text-lg font-bold mb-2 text-center">Vehicle Info</h2>
       <label className="flex flex-col text-sm font-medium">
         Year
@@ -33,7 +33,7 @@ export default function VehicleForm() {
           name="year"
           value={vehicleInfo.year}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           min="1900"
           max={new Date().getFullYear() + 1}
           placeholder="e.g. 2022"
@@ -47,7 +47,7 @@ export default function VehicleForm() {
           name="make"
           value={vehicleInfo.make}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           placeholder="e.g. Toyota"
           required
         />
@@ -59,7 +59,7 @@ export default function VehicleForm() {
           name="model"
           value={vehicleInfo.model}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           placeholder="e.g. Camry"
           required
         />
@@ -71,14 +71,14 @@ export default function VehicleForm() {
           name="color"
           value={vehicleInfo.color}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           placeholder="e.g. Black"
           required
         />
       </label>
       <button
         type="submit"
-        className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors"
+        className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition-colors"
       >
         See Services
       </button>
