@@ -1,8 +1,12 @@
 // src/lib/supabase.js
 
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// This lightweight stub mirrors the Supabase client interface used in the app.
+// The real @supabase/supabase-js package is not installed in this offline demo.
+export const supabase = {
+  auth: {
+    signInWithOAuth: async ({ provider }) => {
+      console.log(`Mock sign in with ${provider}`);
+      return { error: null };
+    },
+  },
+};
