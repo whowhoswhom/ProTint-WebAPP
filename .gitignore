@@ -1,0 +1,28 @@
+# Node dependencies
+node_modules/
+
+# Next.js build output
+.next/
+
+# Environment variables
+.env*
+
+# Logs
+/logs/
+
+# Cursor AI model files
+.mcp_model/
+
+# macOS system files
+.DS_Store
+
+# VSCode settings
+.vscode/
+
+# Other common editor files
+.idea/
+*.swp
+*.swo
+
+# OS junk files
+Thumbs.db 
