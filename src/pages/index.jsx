@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import CarAnimation from '../components/CarAnimation';
 import VehicleForm from '../components/VehicleForm';
 import ServiceCard from '../components/ServiceCard';
 import HeroCar from '../components/HeroCar';
+import ModalPrompt from '../components/ModalPrompt';
 
 
 const sampleServices = [
@@ -37,8 +38,12 @@ export default function HomePage() {
   const heroRef = useRef(null);
   const servicesRef = useRef(null);
   const accentRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
     gsap.fromTo(
       heroRef.current.children,
       { opacity: 0, y: 40 },
@@ -68,6 +73,9 @@ export default function HomePage() {
         },
       }
     );
+
+    const t = setTimeout(() => setShowModal(true), 20000);
+    return () => clearTimeout(t);
   }, []);
 
   return (
@@ -122,6 +130,7 @@ export default function HomePage() {
       <footer className="w-full text-center py-8 text-gray-400">
         &copy; {new Date().getFullYear()} ProTint Louisville
       </footer>
+      <ModalPrompt show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }
