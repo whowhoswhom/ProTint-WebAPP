@@ -43,6 +43,7 @@ const CarAnimation = forwardRef((props, ref) => {
     updateLayers: (step) => {
       if (currentStep.current === step) return;
       currentStep.current = step;
+      console.log('anime function:', anime);
       if (step === 'tint-back') {
         anime({
           targets: carState.current,
