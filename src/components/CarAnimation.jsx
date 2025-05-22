@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import anime from 'animejs/lib/anime.es.js';
+import anime from 'animejs';
 
 const PARTICLE_COUNT = 24;
 const PARTICLE_COLORS = ['#60a5fa', '#fbbf24', '#34d399', '#f472b6'];
