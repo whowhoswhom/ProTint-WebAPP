@@ -1,54 +1,37 @@
-import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
-const CarAnimation = forwardRef((props, ref) => {
+export default function CarAnimation() {
   const bodyRef = useRef(null);
   const frontWheelRef = useRef(null);
   const rearWheelRef = useRef(null);
   const windowsRef = useRef(null);
   const headlightsRef = useRef(null);
   const containerRef = useRef(null);
-  const timeline = useRef(null);
-  
-  useImperativeHandle(ref, () => ({
-    updateLayers: (step) => {
-      if (!timeline.current) return;
-      const stepMap = {
-        'wheels': 0.25,
-        'body': 0.5,
-        'windows': 0.75,
-        'headlights': 1.0,
-      };
-      if (stepMap[step] !== undefined) {
-        timeline.current.tweenTo(timeline.current.duration() * stepMap[step]);
-      }
-    },
-  }));
 
   useEffect(() => {
-    // GSAP timeline for car build
-    timeline.current = gsap.timeline({ paused: true })
-      .fromTo(frontWheelRef.current, { x: '-100px', opacity: 0 }, { x: '0px', opacity: 1, duration: 0.5, ease: 'power2.out' })
-      .fromTo(rearWheelRef.current, { x: '100px', opacity: 0 }, { x: '0px', opacity: 1, duration: 0.5, ease: 'power2.out' }, '<')
-      .fromTo(bodyRef.current, { y: 0 }, { y: -30, duration: 0.6, ease: 'power2.out' })
-      .fromTo(windowsRef.current, { opacity: 0 }, { opacity: 0.7, duration: 0.4, ease: 'power2.out' })
-      .fromTo(headlightsRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2, yoyo: true, repeat: 1, ease: 'power1.inOut' });
-
-    // Pinning and scroll sync
-    const trigger = ScrollTrigger.create({
-      trigger: containerRef.current,
-      start: 'top center',
-      end: '+=1000',
-      pin: true,
-      scrub: true,
-      animation: timeline.current,
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top top',
+        end: '+=3000',
+        scrub: true,
+        pin: true,
+      },
     });
 
+    tl
+      .from(bodyRef.current, { opacity: 0, scale: 0.8, duration: 0.8 })
+      .from(windowsRef.current, { opacity: 0, y: 50, duration: 0.6 }, '+=0.2')
+      .from([frontWheelRef.current, rearWheelRef.current], { y: -100, opacity: 0, stagger: 0.1, duration: 0.6 }, '-=0.2')
+      .to(containerRef.current, { y: -40, duration: 1 }, '+=0.3')
+      .from(headlightsRef.current, { opacity: 0, duration: 0.3, yoyo: true, repeat: 1 });
+
     return () => {
-      trigger.kill();
-      timeline.current && timeline.current.kill();
+      tl.scrollTrigger?.kill();
+      tl.kill();
     };
   }, []);
 
@@ -94,6 +77,4 @@ const CarAnimation = forwardRef((props, ref) => {
       </svg>
     </div>
   );
-});
-
-export default CarAnimation; 
+}
