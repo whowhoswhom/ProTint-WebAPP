@@ -1,245 +1,102 @@
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import anime from 'animejs/lib/anime.es.js';
-
-const PARTICLE_COUNT = 24;
-const PARTICLE_COLORS = ['#60a5fa', '#fbbf24', '#34d399', '#f472b6'];
-
-function randomBetween(a, b) {
-  return Math.random() * (b - a) + a;
-}
-
-const CAR_BASE = {
-  x: 80,
-  y: 180,
-  w: 340,
-  h: 80,
-  r: 24,
-};
-
-const WHEEL = {
-  r: 28,
-  y: 260,
-  leftX: 130,
-  rightX: 350,
-};
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 const CarAnimation = forwardRef((props, ref) => {
-  const canvasRef = useRef(null);
-  const particles = useRef([]);
-  const animationRef = useRef(null);
-  const carState = useRef({
-    tintBack: 0,
-    tintSides: 0,
-    wheelsFront: 0,
-    lift: 0,
-    wheelRotation: 0,
-    carYOffset: 0,
-  });
-  const currentStep = useRef('');
-  const carAnim = useRef({});
-
-  // Expose updateLayers method for scrollTriggers
+  const bodyRef = useRef(null);
+  const frontWheelRef = useRef(null);
+  const rearWheelRef = useRef(null);
+  const windowsRef = useRef(null);
+  const headlightsRef = useRef(null);
+  const containerRef = useRef(null);
+  const timeline = useRef(null);
+  
   useImperativeHandle(ref, () => ({
     updateLayers: (step) => {
-      if (currentStep.current === step) return;
-      currentStep.current = step;
-      console.log('anime function:', anime);
-      if (step === 'tint-back') {
-        anime({
-          targets: carState.current,
-          tintBack: 1,
-          duration: 800,
-          easing: 'easeOutQuad',
-          update: redraw,
-        });
-      } else if (step === 'tint-sides') {
-        anime({
-          targets: carState.current,
-          tintSides: 1,
-          duration: 800,
-          easing: 'easeOutQuad',
-          update: redraw,
-        });
-      } else if (step === 'wheels-front') {
-        anime({
-          targets: carState.current,
-          wheelsFront: 1,
-          wheelRotation: 360,
-          duration: 1200,
-          easing: 'easeOutExpo',
-          update: redraw,
-        });
-      } else if (step === 'lift') {
-        anime({
-          targets: carState.current,
-          lift: 1,
-          carYOffset: -40,
-          duration: 1000,
-          easing: 'easeOutBack',
-          update: redraw,
-        });
+      if (!timeline.current) return;
+      const stepMap = {
+        'wheels': 0.25,
+        'body': 0.5,
+        'windows': 0.75,
+        'headlights': 1.0,
+      };
+      if (stepMap[step] !== undefined) {
+        timeline.current.tweenTo(timeline.current.duration() * stepMap[step]);
       }
     },
   }));
 
-  // Redraw function
-  function redraw() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let dpr = window.devicePixelRatio || 1;
-    let width = canvas.parentElement.offsetWidth;
-    let height = canvas.parentElement.offsetHeight;
-    ctx.clearRect(0, 0, width, height);
-
-    // Draw particles (background)
-    particles.current.forEach(p => {
-      ctx.save();
-      ctx.globalAlpha = p.alpha;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-      ctx.fillStyle = p.color;
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = 12;
-      ctx.fill();
-      ctx.restore();
-    });
-
-    // Car Y offset for lift
-    ctx.save();
-    ctx.translate(0, carState.current.carYOffset || 0);
-
-    // Draw car base (simple rounded rectangle)
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(CAR_BASE.x + CAR_BASE.r, CAR_BASE.y);
-    ctx.lineTo(CAR_BASE.x + CAR_BASE.w - CAR_BASE.r, CAR_BASE.y);
-    ctx.quadraticCurveTo(CAR_BASE.x + CAR_BASE.w, CAR_BASE.y, CAR_BASE.x + CAR_BASE.w, CAR_BASE.y + CAR_BASE.r);
-    ctx.lineTo(CAR_BASE.x + CAR_BASE.w, CAR_BASE.y + CAR_BASE.h - CAR_BASE.r);
-    ctx.quadraticCurveTo(CAR_BASE.x + CAR_BASE.w, CAR_BASE.y + CAR_BASE.h, CAR_BASE.x + CAR_BASE.w - CAR_BASE.r, CAR_BASE.y + CAR_BASE.h);
-    ctx.lineTo(CAR_BASE.x + CAR_BASE.r, CAR_BASE.y + CAR_BASE.h);
-    ctx.quadraticCurveTo(CAR_BASE.x, CAR_BASE.y + CAR_BASE.h, CAR_BASE.x, CAR_BASE.y + CAR_BASE.h - CAR_BASE.r);
-    ctx.lineTo(CAR_BASE.x, CAR_BASE.y + CAR_BASE.r);
-    ctx.quadraticCurveTo(CAR_BASE.x, CAR_BASE.y, CAR_BASE.x + CAR_BASE.r, CAR_BASE.y);
-    ctx.closePath();
-    ctx.fillStyle = '#222b3a';
-    ctx.shadowColor = '#222b3a';
-    ctx.shadowBlur = 16;
-    ctx.fill();
-    ctx.restore();
-
-    // Rear window (tint-back)
-    if (carState.current.tintBack > 0) {
-      ctx.save();
-      ctx.globalAlpha = 0.6 * carState.current.tintBack;
-      ctx.fillStyle = '#111827';
-      ctx.fillRect(CAR_BASE.x + 60, CAR_BASE.y + 16, 80, 32);
-      ctx.restore();
-    }
-    // Side windows (tint-sides)
-    if (carState.current.tintSides > 0) {
-      ctx.save();
-      ctx.globalAlpha = 0.4 * carState.current.tintSides;
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(CAR_BASE.x + 150, CAR_BASE.y + 16, 70, 32);
-      ctx.fillRect(CAR_BASE.x + 240, CAR_BASE.y + 16, 70, 32);
-      ctx.restore();
-    }
-    // Wheels (wheels-front)
-    if (carState.current.wheelsFront > 0) {
-      ctx.save();
-      ctx.globalAlpha = carState.current.wheelsFront;
-      // Left wheel
-      ctx.save();
-      ctx.translate(WHEEL.leftX, WHEEL.y);
-      ctx.rotate((carState.current.wheelRotation * Math.PI) / 180);
-      ctx.beginPath();
-      ctx.arc(0, 0, WHEEL.r, 0, 2 * Math.PI);
-      ctx.fillStyle = '#374151';
-      ctx.shadowColor = '#1e293b';
-      ctx.shadowBlur = 8;
-      ctx.fill();
-      ctx.restore();
-      // Right wheel
-      ctx.save();
-      ctx.translate(WHEEL.rightX, WHEEL.y);
-      ctx.rotate((carState.current.wheelRotation * Math.PI) / 180);
-      ctx.beginPath();
-      ctx.arc(0, 0, WHEEL.r, 0, 2 * Math.PI);
-      ctx.fillStyle = '#374151';
-      ctx.shadowColor = '#1e293b';
-      ctx.shadowBlur = 8;
-      ctx.fill();
-      ctx.restore();
-      ctx.restore();
-    }
-    ctx.restore(); // car Y offset
-  }
-
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let dpr = window.devicePixelRatio || 1;
-    let width = canvas.parentElement.offsetWidth;
-    let height = canvas.parentElement.offsetHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
+    // GSAP timeline for car build
+    timeline.current = gsap.timeline({ paused: true })
+      .fromTo(frontWheelRef.current, { x: '-100px', opacity: 0 }, { x: '0px', opacity: 1, duration: 0.5, ease: 'power2.out' })
+      .fromTo(rearWheelRef.current, { x: '100px', opacity: 0 }, { x: '0px', opacity: 1, duration: 0.5, ease: 'power2.out' }, '<')
+      .fromTo(bodyRef.current, { y: 0 }, { y: -30, duration: 0.6, ease: 'power2.out' })
+      .fromTo(windowsRef.current, { opacity: 0 }, { opacity: 0.7, duration: 0.4, ease: 'power2.out' })
+      .fromTo(headlightsRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2, yoyo: true, repeat: 1, ease: 'power1.inOut' });
 
-    // Initialize particles
-    particles.current = Array.from({ length: PARTICLE_COUNT }, () => ({
-      x: randomBetween(0, width),
-      y: randomBetween(0, height),
-      r: randomBetween(8, 18),
-      color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
-      alpha: randomBetween(0.5, 1),
-    }));
-
-    // Animate particles
-    animationRef.current = anime({
-      targets: particles.current,
-      x: () => randomBetween(0, width),
-      y: () => randomBetween(0, height),
-      alpha: () => randomBetween(0.5, 1),
-      easing: 'easeInOutSine',
-      duration: 4000,
-      direction: 'alternate',
-      loop: true,
-      update: redraw,
+    // Pinning and scroll sync
+    const trigger = ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: 'top center',
+      end: '+=1000',
+      pin: true,
+      scrub: true,
+      animation: timeline.current,
     });
-
-    redraw();
-
-    // Handle resize
-    const handleResize = () => {
-      width = canvas.parentElement.offsetWidth;
-      height = canvas.parentElement.offsetHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = width + 'px';
-      canvas.style.height = height + 'px';
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-      redraw();
-    };
-    window.addEventListener('resize', handleResize);
 
     return () => {
-      if (animationRef.current) animationRef.current.pause();
-      window.removeEventListener('resize', handleResize);
+      trigger.kill();
+      timeline.current && timeline.current.kill();
     };
-    // eslint-disable-next-line
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height: '100%', display: 'block' }}
-      aria-label="Animated car preview placeholder"
-    />
+    <div ref={containerRef} style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '60vh',
+      background: '#f7f7fa',
+      width: '100%',
+    }}>
+      <svg
+        viewBox="0 0 800 300"
+        style={{ width: '90vw', maxWidth: 800, height: 'auto', display: 'block' }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Rear Wheel */}
+        <g ref={rearWheelRef} id="rear-wheel">
+          <ellipse cx="170" cy="240" rx="48" ry="48" fill="#222" stroke="#444" strokeWidth="8" />
+          <circle cx="170" cy="240" r="18" fill="#444" />
+        </g>
+        {/* Front Wheel */}
+        <g ref={frontWheelRef} id="front-wheel">
+          <ellipse cx="630" cy="240" rx="48" ry="48" fill="#222" stroke="#444" strokeWidth="8" />
+          <circle cx="630" cy="240" r="18" fill="#444" />
+        </g>
+        {/* Car Body */}
+        <g ref={bodyRef} id="car-body">
+          <rect x="120" y="120" width="560" height="80" rx="32" fill="#e5e7eb" stroke="#222" strokeWidth="6" />
+          <rect x="180" y="100" width="440" height="60" rx="24" fill="#fff" stroke="#222" strokeWidth="4" />
+          {/* Hood */}
+          <rect x="120" y="120" width="120" height="40" rx="12" fill="#222" opacity="0.7" />
+          {/* Spoiler */}
+          <rect x="650" y="100" width="60" height="12" rx="4" fill="#222" />
+        </g>
+        {/* Windows */}
+        <g ref={windowsRef} id="windows">
+          <rect x="260" y="110" width="180" height="40" rx="10" fill="#b6c4d6" opacity="0.7" />
+          <rect x="460" y="110" width="120" height="40" rx="10" fill="#b6c4d6" opacity="0.7" />
+        </g>
+        {/* Headlights */}
+        <g ref={headlightsRef} id="headlights">
+          <ellipse cx="120" cy="150" rx="12" ry="6" fill="#fffbe6" opacity="0.8" />
+          <ellipse cx="680" cy="150" rx="12" ry="6" fill="#fffbe6" opacity="0.8" />
+        </g>
+      </svg>
+    </div>
   );
 });
 

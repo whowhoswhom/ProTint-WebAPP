@@ -1,24 +1,32 @@
 # ProTint Web App
 
-A modern, interactive automotive service prototype for ProTintLouisville.com. Built to showcase scroll-based car customization, reduce business phone dependency, and convert visitors into bookings with engaging, animated UX. Optional account creation lets users save their vehicle builds. Hosted on Vercel, powered by Next.js, Supabase, and Anime.js.
+A modern, interactive automotive service prototype for ProTintLouisville.com. Built to showcase scroll-based car customization, reduce business phone dependency, and convert visitors into bookings with engaging, animated UX. Optional account creation lets users save their vehicle builds. Hosted on Vercel, powered by Next.js, Supabase, and GSAP.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Layer        | Technology                |
-|--------------|---------------------------|
-| Frontend     | Next.js, React, Tailwind CSS |
-| Animation    | Anime.js, Canvas API      |
-| Auth & Data  | Supabase (email, Google)  |
+| Layer        | Technology                    |
+|--------------|-------------------------------|
+| Frontend     | Next.js, React, Tailwind CSS  |
+| Animation    | GSAP + ScrollTrigger          |
+| Auth & Data  | Supabase (email, Google)      |
 | Backend API  | MCP Server (Node.js, Express) |
-| Automation   | n8n (webhooks, Stripe)    |
-| Hosting      | Vercel                    |
+| Automation   | n8n (webhooks, Stripe)        |
+| Hosting      | Vercel                        |
 
 ---
 
-## ✨ Features
-- Realistic animated car preview (Anime.js + canvas)
+## Animation Dependencies
+
+- [GSAP](https://gsap.com) — Primary animation engine
+- [GSAP ScrollTrigger](https://gsap.com/scrolltrigger/) — Plugin for scroll-based animations
+
+---
+
+## Features
+
+- Realistic animated car preview (GSAP-based timeline)
 - Dynamic service visualization on scroll (tint, wheels, lift kits)
 - Side panel vehicle form (year, make, model, color)
 - Soft modal account prompt after customization
@@ -29,51 +37,69 @@ A modern, interactive automotive service prototype for ProTintLouisville.com. Bu
 
 ---
 
-## 🚀 Local Setup
+## Local Setup
 
 1. **Clone the repo:**
    ```bash
    git clone https://github.com/whowhoswhom/ProTint-WebAPP.git
    cd ProTint-WebAPP
-   ```
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-3. **Configure environment:**
-   - Copy `.env.local.example` to `.env.local` and fill in your Supabase keys:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-   SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-   ```
-4. **Run the dev server:**
-   ```bash
-   npm run dev
-   ```
-5. **Visit:** [http://localhost:3000](http://localhost:3000)
+Install dependencies:
 
----
+npm install
+Configure environment:
 
-## 🌐 Vercel Deployment
+Copy .env.local.example to .env.local and fill in your Supabase keys:
 
-Production: [https://protint-webapp.vercel.app](https://protint-webapp.vercel.app)
 
----
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+Run the dev server:
 
-## 🗺️ Roadmap
-- [x] Project scaffolding & folder structure
-- [x] Supabase connection & auth
-- [x] Canvas-based car animation
-- [x] Scroll-triggered service layers
-- [ ] Vehicle form & state management
-- [ ] Service cards with animation
-- [ ] Modal sign-up prompt
-- [ ] Booking API & Supabase writes
-- [ ] n8n automation hooks
-- [ ] Vercel deployment & public test
 
----
+npm run dev
+Visit: http://localhost:3000
 
-## 👤 Author
-- Josef (whowhoswhom)
+Vercel Deployment
+Production: https://protint-webapp.vercel.app
+
+Roadmap
+ Project scaffolding & folder structure: DONE
+
+ Supabase connection & auth: DONE
+
+ GSAP-based car animation: DONE
+
+ Scroll-triggered service layers with ScrollTrigger: DONE
+
+ Vehicle form & state management: 
+
+ Service cards with animation:
+
+ Modal sign-up prompt:
+
+ Booking API & Supabase writes:
+
+ n8n automation hooks:
+
+ Vercel deployment & public test:
+
+MVP Features Update
+Scroll-based animated vehicle build using GSAP + ScrollTrigger
+
+As user scrolls:
+
+Wheels animate in
+
+Lift kit raises body
+
+Windows tint
+
+Headlights blink on
+
+Each feature tied to a service section
+
+Animation is performance-optimized and mobile-responsive
+
+Author
+Josef (whowhoswhom)
