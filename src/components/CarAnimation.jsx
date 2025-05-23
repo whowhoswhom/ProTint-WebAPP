@@ -12,33 +12,37 @@ export default function CarAnimation() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=3000',
-        scrub: true,
-        pin: true,
-      },
-    });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=300%',
+          scrub: true,
+          pin: true,
+        },
+      });
 
-    tl
-      .from(bodyRef.current, { opacity: 0, scale: 0.8, duration: 0.8 })
-      .from(windowsRef.current, { opacity: 0, y: 50, duration: 0.6 }, '+=0.2')
-      .from([frontWheelRef.current, rearWheelRef.current], { y: -100, opacity: 0, stagger: 0.1, duration: 0.6 }, '-=0.2')
-      .to(containerRef.current, { y: -40, duration: 1 }, '+=0.3')
-      .from(headlightsRef.current, { opacity: 0, duration: 0.3, yoyo: true, repeat: 1 });
+      tl
+        .from(bodyRef.current, { opacity: 0, y: 50, duration: 0.6 })
+        .from(windowsRef.current, { opacity: 0, duration: 0.5 }, '+=0.1')
+        .from(
+          rearWheelRef.current,
+          { x: -200, opacity: 0, duration: 0.6 },
+          '-=0.2'
+        )
+        .from(frontWheelRef.current, { x: 200, opacity: 0, duration: 0.6 }, '<')
+        .to(bodyRef.current, { y: -30, duration: 0.5 })
+        .from(headlightsRef.current, { opacity: 0, duration: 0.2, repeat: 1, yoyo: true }, '-=0.2');
+    }, containerRef);
 
-    return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="flex items-center justify-center min-h-[60vh] w-full bg-neutral-800 rounded-lg"
+      className="flex items-center justify-center min-h-[60vh] w-full bg-neutral-900 rounded-lg"
     >
       <svg
         viewBox="0 0 800 300"
@@ -66,8 +70,8 @@ export default function CarAnimation() {
         </g>
         {/* Windows */}
         <g ref={windowsRef} id="windows">
-          <rect x="260" y="110" width="180" height="40" rx="10" fill="#b6c4d6" opacity="0.7" />
-          <rect x="460" y="110" width="120" height="40" rx="10" fill="#b6c4d6" opacity="0.7" />
+          <rect x="260" y="110" width="180" height="40" rx="10" fill="#111" opacity="0.6" />
+          <rect x="460" y="110" width="120" height="40" rx="10" fill="#111" opacity="0.6" />
         </g>
         {/* Headlights */}
         <g ref={headlightsRef} id="headlights">

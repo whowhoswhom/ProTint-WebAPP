@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from 'react';
-import anime from 'animejs/lib/anime.es.js';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 import CarAnimation from '../components/CarAnimation';
 import VehicleForm from '../components/VehicleForm';
 import ServiceCard from '../components/ServiceCard';
 import HeroCar from '../components/HeroCar';
+import ModalPrompt from '../components/ModalPrompt';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -41,50 +40,62 @@ const sampleServices = [
 const HomePage = () => {
   const svgRef = useRef(null);
   const servicesRef = useRef(null);
+  const accentRef = useRef(null);
 
   useEffect(() => {
-    // Animate SVG glow
-    if (svgRef.current) {
-      anime({
-        targets: svgRef.current,
-        opacity: [0.8, 1],
-        easing: 'easeInOutSine',
-        duration: 2000,
-        direction: 'alternate',
-        loop: true,
+    gsap.fromTo(
+      heroRef.current.children,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: 'power2.out' }
+    );
+    if (accentRef.current) {
+      gsap.to(accentRef.current, {
+        xPercent: 10,
+        duration: 6,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
       });
     }
-    // Animate text entrance
-    gsap.utils.toArray('.section-text').forEach((el, i) => {
-      gsap.from(el, {
+    gsap.fromTo(
+      servicesRef.current?.children ?? [],
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: el,
           start: 'top 80%',
-          toggleActions: 'play none none none',
         },
-        x: i % 2 === 0 ? -100 : 100,
-        opacity: 0,
-        duration: 1,
-        ease: 'power2.out',
-      });
-    });
+      }
+    );
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-[#0d0d0d] text-white font-inter flex flex-col items-center justify-center relative overflow-x-hidden">
-      {/* Main grid layout */}
-      <div className="relative z-20 flex flex-col md:flex-row items-center justify-center w-full max-w-6xl mt-40 mb-32 gap-12 px-4">
-        {/* Left/Top: Title and Subtext */}
-        <div className="flex-1 section-text">
-          <h1 className="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-            All-in-one <br className="hidden md:block" />
-            automotive <span className="text-[#a1a1a1]">visualizer</span>.
+    <div className="flex flex-col items-center">
+      {/* Landing Hero */}
+      <section
+        ref={heroRef}
+        className="relative w-full flex flex-col lg:flex-row items-center justify-between gap-12 px-8 py-20 min-h-screen overflow-hidden"
+      >
+        <div className="absolute inset-0 pointer-events-none -z-10">
+          <div
+            ref={accentRef}
+            className="absolute -top-1/4 left-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-indigo-500 via-purple-600 to-pink-500 opacity-40 blur-3xl -translate-x-1/2"
+          />
+        </div>
+        <div className="relative z-10 flex flex-col gap-6 items-center lg:items-start text-center lg:text-left max-w-xl">
+          <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-lg">
+            ProTint Louisville
           </h1>
           <p className="text-lg md:text-2xl text-gray-400 max-w-md mb-8">
             A fast and versatile web app to preview, customize, and book automotive services. Powered by GSAP, AnimeJS, and a modern stack.
           </p>
-          <button className="border border-white text-white px-6 py-3 rounded-full font-semibold transition-colors hover:bg-white hover:text-[#0d0d0d]">
-            Learn More
+          <button className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-8 py-3 rounded-lg transition-colors">
+            Customize My Ride
           </button>
         </div>
         {/* Center: Animated Car SVG */}
@@ -108,18 +119,31 @@ const HomePage = () => {
             </g>
           </svg>
         </div>
-      </div>
-      {/* Example scroll sections */}
-      <div className="relative z-20 w-full max-w-4xl flex flex-col gap-32 mt-20">
-        <section className="section-text">
-          <h2 className="text-3xl font-bold mb-2">Scroll-based Customization</h2>
-          <p className="text-gray-400">Tint, wheels, and lift kit layers animate as you scroll. The car outline remains the visual anchor.</p>
-        </section>
-        <section className="section-text">
-          <h2 className="text-3xl font-bold mb-2">Minimal, Modern, Responsive</h2>
-          <p className="text-gray-400">No clutter. No distractions. Just a clean, immersive experience on any device.</p>
-        </section>
-      </div>
+      </section>
+
+      {/* Animation */}
+      <section className="w-full py-20">
+        <CarAnimation />
+      </section>
+
+      {/* Vehicle Form */}
+      <section className="w-full flex justify-center items-center py-16 px-4">
+        <VehicleForm />
+      </section>
+      {/* Available Services Section */}
+      <section ref={servicesRef} className="w-full max-w-6xl px-4 py-20">
+        <h2 className="text-4xl font-extrabold text-white mb-12 text-center">Available Services</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sampleServices.map((service, idx) => (
+            <ServiceCard key={idx} {...service} />
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="w-full text-center py-8 text-gray-400">
+        &copy; {new Date().getFullYear()} ProTint Louisville
+      </footer>
     </div>
   );
 };

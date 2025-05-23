@@ -33,7 +33,7 @@ export default function VehicleForm() {
           name="year"
           value={vehicleInfo.year}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#ff4ecd] transition-colors"
           min="1900"
           max={new Date().getFullYear() + 1}
           placeholder="e.g. 2022"
@@ -47,7 +47,7 @@ export default function VehicleForm() {
           name="make"
           value={vehicleInfo.make}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#ff4ecd] transition-colors"
           placeholder="e.g. Toyota"
           required
         />
@@ -59,7 +59,7 @@ export default function VehicleForm() {
           name="model"
           value={vehicleInfo.model}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#ff4ecd] transition-colors"
           placeholder="e.g. Camry"
           required
         />
@@ -71,14 +71,15 @@ export default function VehicleForm() {
           name="color"
           value={vehicleInfo.color}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          className="mt-1 px-3 py-2 rounded-lg bg-gray-800/60 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#ff4ecd] transition-colors"
           placeholder="e.g. Black"
           required
         />
       </label>
       <button
         type="submit"
-        className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 rounded-lg transition-colors"
+        className="mt-4 font-semibold py-2 rounded-lg text-black transition-colors"
+        style={{ background: 'linear-gradient(90deg,#ff4ecd,#08fdd8,#00c6ff)' }}
       >
         See Services
       </button>
