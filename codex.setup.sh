@@ -6,4 +6,4 @@ set -e
 echo "📦 Installing dependencies..."
 npm install
 
-echo "✅ Dependencies installed. Ready for offline development." 
+echo "✅ Dependencies installed. Ready for offline development."
