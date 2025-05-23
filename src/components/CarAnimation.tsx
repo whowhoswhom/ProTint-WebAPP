@@ -13,6 +13,12 @@ export default function CarAnimation() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Quick fade-in of the whole container for a subtle flicker on load
+      gsap.fromTo(
+        containerRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power1.out' }
+      );
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,

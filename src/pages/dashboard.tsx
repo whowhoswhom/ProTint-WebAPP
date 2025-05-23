@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import anime from 'animejs';
+import { animate } from '@libs/anime/lib/anime.es.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -14,8 +14,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     // Animate SVG glow with AnimeJS
     if (svgRef.current) {
-      anime({
-        targets: svgRef.current,
+      animate(svgRef.current, {
         opacity: [0.8, 1],
         easing: 'easeInOutSine',
         duration: 2000,
