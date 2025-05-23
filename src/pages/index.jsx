@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CarAnimation from '../components/CarAnimation';
 import VehicleForm from '../components/VehicleForm';
 import ServiceCard from '../components/ServiceCard';
@@ -38,6 +39,7 @@ const sampleServices = [
 ];
 
 const HomePage = () => {
+  const heroRef = useRef(null);
   const svgRef = useRef(null);
   const servicesRef = useRef(null);
   const accentRef = useRef(null);
@@ -57,21 +59,24 @@ const HomePage = () => {
         repeat: -1,
       });
     }
-    gsap.fromTo(
-      servicesRef.current?.children ?? [],
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 80%',
-        },
-      }
-    );
+    gsap.utils
+      .toArray(servicesRef.current?.children ?? [])
+      .forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 80%',
+            },
+          }
+        );
+      });
   }, []);
 
   return (
